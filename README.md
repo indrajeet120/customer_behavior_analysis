@@ -55,3 +55,120 @@ Understanding customer purchasing patterns, subscription habits, discount sensit
 ---
 
 ## ⚙️ Data Pipeline & Methodology
+
+┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ │ Raw CSV Data │ ───► │ JupyterLab │ ───► │ MySQL Database │ ───► │ Power BI │ │ (3.9k rows) │ │ (Python / EDA) │ │ (SQL Analytics) │ │ Dashboard & KPIs│ └─────────────────┘ └─────────────────┘ └─────────────────┘ └─────────────────┘
+
+
+
+### 1. Data Preprocessing & EDA (JupyterLab + Python)
+- **Exploration in JupyterLab:** Executed `df.info()` to inspect schemas and data types, and `df.describe()` for numerical distributions.
+- **Missing Value Handling:** Filled 37 null values in `Review Rating` with category-wise median values.
+- **Column Standardization:** Converted column titles into clean `snake_case` naming conventions.
+- **Feature Engineering:**
+  - Binned `Age` into categorical `age_group` (Young Adult, Middle-aged, Adult, Senior).
+  - Calculated `purchase_frequency_days`.
+- **Redundancy Removal:** Evaluated `discount_applied` vs `promo_code_used` and dropped redundant column `promo_code_used`.
+
+### 2. Database Integration & SQL Analysis (MySQL)
+- Connected **JupyterLab** to **MySQL** via `SQLAlchemy` & `pymysql`.
+- Loaded the cleaned Pandas DataFrame directly into MySQL tables.
+- Executed business queries in MySQL:
+  - Total Revenue by Gender & Age Group.
+  - Identification of high-spending discount users.
+  - Window functions (`RANK()`) for top 3 products per category.
+  - Subscriber vs Non-Subscriber spending comparisons.
+  - Customer segmentation grouping (`New`, `Returning`, `Loyal`).
+
+### 3. Interactive Visualization (Power BI)
+- Connected Power BI to MySQL / processed dataset.
+- Designed visual metrics including KPI cards, category breakdown bar charts, donut charts for subscription splits, and interactive slicers.
+
+---
+
+## 📈 Key Business Insights
+
+### 1. Revenue & Demographic Breakdown
+- **Gender Contribution:**
+  - **Male:** \$157,890 (67.7% of revenue)
+  - **Female:** \$75,191 (32.3% of revenue)
+- **Revenue by Age Group:**
+  - **Young Adult:** \$62,143 (Top revenue contributor)
+  - **Middle-aged:** \$59,197
+  - **Adult:** \$55,978
+  - **Senior:** \$55,763
+
+### 2. Subscription Status Analysis
+- **Non-Subscribers:** 2,847 customers (73%) | Total Revenue: **\$170,436.00** | Avg Spend: **\$59.87**
+- **Subscribers:** 1,053 customers (27%) | Total Revenue: **\$62,645.00** | Avg Spend: **\$59.49**
+- *Key Finding:* Per-transaction spend is equal across both groups (~$59.50–$59.80), indicating high potential to convert non-subscribers without sacrificing order value.
+
+### 3. Top Products & Discount Dependency
+- **Top 5 Rated Products:** Gloves (3.86), Sandals (3.84), Boots (3.82), Hat (3.80), Skirt (3.78)
+- **Top Discount-Dependent Items:**
+  1. **Hat:** 50.00% purchases discounted
+  2. **Sneakers:** 49.66% purchases discounted
+  3. **Coat:** 49.07% purchases discounted
+  4. **Sweater:** 48.17% purchases discounted
+  5. **Pants:** 47.37% purchases discounted
+
+### 4. Customer Segmentation
+- **Loyal (>5 purchases):** 3,116 customers
+- **Returning:** 701 customers
+- **New:** 83 customers
+
+---
+
+## 🖥️ Power BI Dashboard Overview
+
+The **Customer Behavior Dashboard** provides an executive-level interactive summary:
+
+- **Core KPI Cards:**
+  - **Total Customers:** 3.9K
+  - **Average Purchase Amount:** \$59.76
+  - **Average Review Rating:** 3.75
+- **Visual Features:**
+  - Donut Chart: `% of Customers by Subscription Status` (73% No vs 27% Yes)
+  - Column / Bar Charts: `Revenue by Category` & `Sales by Category` (Clothing leading, followed by Accessories, Footwear, Outerwear)
+  - Horizontal Bar Charts: `Sales by Age Group` & `Revenue by Age Group`
+- **Dynamic Slicers:** Filter dataset by Subscription Status, Gender, Category, and Shipping Type.
+
+---
+
+## 💡 Strategic Business Recommendations
+
+1. 🚀 **Boost Subscription Conversion:**
+   - Implement targeted loyalty perks or free shipping offers to convert the 73% non-subscriber majority into subscription members.
+2. 🏆 **Nurture Customer Loyalty:**
+   - Launch retargeting initiatives to transition the 701 "Returning" buyers into the "Loyal" segment.
+3. 🏷️ **Optimize Discounting Strategy:**
+   - Items like Hats and Sneakers have ~50% discount rates. Scale back discounts on high-demand categories to protect gross margins.
+4. ⭐ **Highlight Top-Rated Products:**
+   - Feature top-rated items (Gloves, Sandals, Boots) prominently in promotional banners and marketing campaigns.
+5. 🎯 **Demographic Targeting:**
+   - Focus digital ad spend on **Young Adult** and **Middle-aged** segments who generate the highest overall revenue share.
+
+---
+
+## 📂 Repository Structure
+
+ ├── data/ │ ├── raw_shopping_data.csv # Raw dataset (3,900 records) │ └── cleaned_shopping_data.csv # Exported cleaned dataset ├── notebooks/ │ └── customer_behavior_eda.ipynb # JupyterLab Notebook (Pandas EDA & MySQL export) ├── sql/ │ └── mysql_customer_analysis.sql # MySQL analytical queries ├── dashboard/ │ └── customer_behavior_dashboard.pbix # Power BI dashboard file ├── README.md # Project documentation └── requirements.txt # Python dependencies
+
+
+
+---
+
+## 🚀 How to Run This Project
+
+### 1. Prerequisites
+- **JupyterLab** (`pip install jupyterlab`)
+- **MySQL Server** & MySQL Workbench
+- **Power BI Desktop**
+
+### 2. Python Environment Setup
+```bash
+# Clone the repository
+git clone https://github.com/your-username/customer-shopping-behavior-analysis.git
+cd customer-shopping-behavior-analysis
+
+# Install required Python packages
+pip install pandas numpy sqlalchemy pymysql mysql-connector-python jupyterlab
